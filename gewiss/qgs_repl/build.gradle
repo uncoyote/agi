@@ -1,0 +1,25 @@
+defaultTasks 'int2Prod'
+
+task dev2Int(type: Copy){
+  outputs.upToDateWhen { false } //always run
+  from "$projectDir/qgs/gewisso_20220414.qgs"
+  into "$buildDir/qgs_dev"
+  filter { line -> line.replaceAll('dbname=\'gewisso\'', 'dbname=\'edit\'') }
+  filter { line -> line.replaceAll('host=postgis.geow.cloud', 'host=geodb-i.rootso.org') }
+  //filter { line -> line.replaceAll('host=postgis.geow.cloud', 'host=localhost') }
+  filter { line -> line.replaceAll('port=65432', 'port=5432') } // für dev auf 54321 setzen
+  filter { line -> line.replaceAll('sslmode=disable', 'sslmode=prefer') } // für geodb*.rootso.org auf sslmode=prefer setzen
+
+  filter { line -> line.replaceAll('table=&quot;gewisso2&quot;.', 'table=&quot;afu_gewaesser_v1&quot;.') }
+  filter { line -> line.replaceAll('table="gewisso2".', 'table="afu_gewaesser_v1".') }
+
+  //filter { line -> line.replaceAll('user=\'postgres\'', 'user=\'ddluser\'') }
+  //filter { line -> line.replaceAll('password=\'nC3pVbyJG8NpZiiNuF2Z\'', 'password=\'ddluser\'') }
+}
+
+task int2Prod(type: Copy){
+  outputs.upToDateWhen { false } //always run
+  from "$projectDir/qgs/gewisso_20220525.qgs"
+  into "$buildDir/qgs_dev"
+  filter { line -> line.replaceAll('host=geodb-i.rootso.org', 'host=geodb.rootso.org') }
+}
