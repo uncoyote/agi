@@ -19,7 +19,7 @@ SELECT
 	'aufstallung_text' as stl_tx, 
 	'stao_name_bewirtschafter' as sta_nm	
 FROM 
-	pg_catalog.generate_series(1, 300000) e
+	pg_catalog.generate_series(1, 6000000) e
 )
 	 
 insert into 

@@ -1,12 +1,21 @@
-# Transferzeiten in Sekunden
+# Test versch. Transfer-Varianten bei grossern Datensätzen
+
+Testumgebung: DB und GRETL jeweils in Docker auf meinem Notebook (alles lokal)
+
+![](localhost.png)
+
+## Transferzeiten in Sekunden
 
 |Variante|Anzahl Objekte|Export|Import|Total|
 |---|---|---|---|---|
 |XTF|300'000|10|300|310|
 |Db2Db|300'000|-|-|30|
-|Shp|300'000|-|-|-|
-|XTF|6'000'000|?|?|?|
+|CSV|300'000|30|4|34|
+|Shp|300'000|>600|Abbruch|Abbruch|
 |Db2Db|6'000'000|-|-|700|
+
+Shp mit sechs Millionen Zeilen nicht ausprobiert, da schon mit 300'000 langsam. 
+CSV zwar sehr schnell, führt aber gleich wie XTF zum Fehler java.lang.OutOfMemoryError - "GC overhead limit exceeded"
 
 # Aufrufe
 
