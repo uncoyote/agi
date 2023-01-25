@@ -1,0 +1,63 @@
+import ch.so.agi.gretl.tasks.*
+import ch.so.agi.gretl.api.*
+
+defaultTasks "last"
+
+def tmpDir = buildDir.toString()
+def datPath = tmpDir + "/data.shp"
+def schema = "afu_igel_pub_v1"
+
+def dbCon = ['jdbc:postgresql://localhost:54322/pub?currentSchema=public', 'ddluser', 'ddluser']
+
+task generateTestData(type: SqlExecutor){
+    doFirst{
+        elapsed()
+    }
+    database = dbCon
+    sqlFiles = ['delete.sql','insert.sql']
+}
+
+task exportShp(type: ShpExport, dependsOn: generateTestData){
+    doFirst{
+        elapsed()
+    }
+    database = dbCon
+    schemaName = schema
+    tableName = "igel_stall_shp"
+    dataFile = datPath
+    encoding = "UTF-8"
+}
+
+task deleteAfterExport(type: SqlExecutor, dependsOn: exportShp){
+    doFirst{
+        elapsed()
+    }
+    database = dbCon
+    sqlFiles = ['delete.sql']
+}
+
+task importShp(type: ShpImport, dependsOn: deleteAfterExport){
+    doFirst{
+        elapsed()
+    }
+    database = dbCon
+    schemaName = schema
+    tableName = "igel_stall_shp"
+    dataFile = datPath
+    encoding = "UTF-8"
+}
+
+task last(dependsOn: importShp){
+    doLast{
+        elapsed()
+    }
+}
+
+project.ext.start = -1
+def elapsed() {
+    if(project.ext.start == -1)
+        project.ext.start = System.currentTimeMillis()
+
+    def sec = Math.round((System.currentTimeMillis() - project.ext.start) / 1000)
+    println 'ELAPSED: ' + sec
+}
