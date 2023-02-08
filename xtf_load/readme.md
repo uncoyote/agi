@@ -1,4 +1,4 @@
-# Test versch. Transfer-Varianten bei grossern Datensätzen
+# Test versch. Transfer-Varianten bei grösseren Datensätzen
 
 ## Testumgebung
 
