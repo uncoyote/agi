@@ -17,6 +17,8 @@ Testumgebung: DB und GRETL jeweils in Docker auf meinem Notebook (alles lokal)
 Shp mit sechs Millionen Zeilen nicht ausprobiert, da schon mit 300'000 langsam. 
 CSV zwar sehr schnell, führt aber gleich wie XTF zum Fehler java.lang.OutOfMemoryError - "GC overhead limit exceeded"
 
+Test ohne GRETL nur mit ili2pg führt beim Exportversuch der 6 Mio. Objekte nach 45 Minuten zum Fehler "Exception in thread "main" java.lang.OutOfMemoryError: Java heap space: failed reallocation of scalar replaced objects"
+
 # Aufrufe
 
 ## Schema

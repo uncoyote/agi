@@ -18,6 +18,8 @@ task generateTestData(type: SqlExecutor){
     sqlFiles = ['delete.sql','insert.sql']
 }
 
+// Transfer mittels ili2pg
+
 task transfer(type: Db2Db, dependsOn: generateTestData){
     doFirst{
         println elapsed()
@@ -28,6 +30,8 @@ task transfer(type: Db2Db, dependsOn: generateTestData){
             new TransferSet('transfer.sql','afu_igel_pub_v1_1.igel_stall', true),
     ];      
 }
+
+// Export import mit GRETL
 
 task exportXtf(type: Ili2pgExport, dependsOn: generateTestData){
     doFirst{
@@ -40,7 +44,7 @@ task exportXtf(type: Ili2pgExport, dependsOn: generateTestData){
     models = 'SO_AFU_Igel_Publikation_20211116'
 }
 
-task deleteAfterExport(type: SqlExecutor, dependsOn: exportXtf){
+task deleteAfterXtfExport(type: SqlExecutor, dependsOn: exportXtf){
     doFirst{
         println elapsed()
     }
@@ -48,7 +52,7 @@ task deleteAfterExport(type: SqlExecutor, dependsOn: exportXtf){
     sqlFiles = ['delete.sql']
 }
 
-task importXtf(type: Ili2pgImport, dependsOn: deleteAfterExport){
+task importXtf(type: Ili2pgImport, dependsOn: deleteAfterXtfExport){
     doFirst{
         println elapsed()
     }
@@ -58,7 +62,21 @@ task importXtf(type: Ili2pgImport, dependsOn: deleteAfterExport){
     dataFile = xtfPath
 }
 
-task last(dependsOn: importXtf){
+// Export import mit ili2pg - Aufruf von jar funktioniert. Verarbeitung bricht jedoch mit Fehler "Error: Could not find or load main class ch.ehi.ili2pg.PgMain" ab
+task exportXtfPg(type:Exec) {
+    workingDir '/home/gradle/libs'
+
+    executable 'java'
+    args '-jar', 'ili2pg-4.9.0.jar'
+    args '--export'
+    args '--dbhost', 'localhost', '--dbport', '54322', '--dbdatabase', 'pub', '--dbusr', 'ddluser', '--dbpwd', 'ddluser'
+    args '--dbschema', schemaName
+    args xtfPath
+}
+
+// **************************************************************
+
+task last(dependsOn: generateTestData){
     doLast{
         println elapsed()
     }
