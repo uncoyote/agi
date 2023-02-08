@@ -1,6 +1,10 @@
-# Test versch. Transfer-Varianten bei grossern Datensätzen
+# Test versch. Transfer-Varianten bei grösseren Datensätzen
 
-Testumgebung: DB und GRETL jeweils in Docker auf meinem Notebook (alles lokal)
+## Testumgebung
+
+Als Testtabelle wird die mittels aktuellem Schema-Job aus SO_AFU_Igel_Publikation_20211116.Stall generierte Tabelle verwendet.
+
+DB und GRETL jeweils in Docker auf meinem Notebook (alles lokal)
 
 ![](localhost.png)
 
