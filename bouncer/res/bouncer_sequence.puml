@@ -1,0 +1,21 @@
+@startuml
+
+actor "Anonym" as user
+participant "Web-Browser" as client
+participant "Identity-Checker" as ident
+participant "Bouncer" as bouncer
+participant "Datei-Anbieter" as file
+
+user --> client : Klick auf Hyperlink
+client --> ident : GET: /bauzonen/14/bericht.pdf
+hnote over ident: Identity check
+ident --> bouncer : GET: /bauzonen/14/bericht.pdf \nUSER: public
+hnote over bouncer: Access check
+bouncer --> file : GET: /bauzonen/14/bericht.pdf
+hnote over file: Datei-Auslieferung
+file --> bouncer
+bouncer --> ident
+ident --> client
+hnote over client: Anzeige / Download
+
+@enduml

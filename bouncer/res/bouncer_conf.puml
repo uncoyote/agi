@@ -1,0 +1,25 @@
+@startuml
+
+!include <tupadr3/common>
+!define ICONURL https://raw.githubusercontent.com/Roemer/plantuml-office/master/office2014
+!includeurl ICONURL/Concepts/document.puml
+!includeurl ICONURL/Concepts/application_web.puml
+!includeurl ICONURL/Concepts/settings.puml
+
+package "GDI - bestehend" {
+    [<$application_web> SIMI] as simi
+    OFF_DOCUMENT(jconf, conf.json)
+    simi -> jconf
+}
+
+package "Erweiterung Bouncer" {
+    [<$settings> Formatwandler] as trans
+    OFF_DOCUMENT(xconf, conf.*)
+    [ <$settings> Bouncer] as bouncer
+
+    jconf -> trans
+    trans -> xconf
+    xconf -> bouncer
+}
+
+@enduml
