@@ -1,0 +1,30 @@
+INTERLIS 2.3;
+
+MODEL SO_AGI_EXTREF (de)
+AT "http://geo.so.ch/models/AFU/"
+VERSION "2021-06-30"  =
+
+  TOPIC Fachapp =
+    OID AS INTERLIS.ANYOID; 
+
+    CLASS App =
+      Name : MANDATORY TEXT*256;
+    END App;
+
+  END Fachapp;
+
+  TOPIC GIS =
+    DEPENDS ON SO_AGI_EXTREF.Fachapp;
+
+    CLASS Geom =
+      Name : MANDATORY TEXT*256;
+    END Geom;
+
+    ASSOCIATION Geo_Fach =
+      AppRole (EXTERNAL) -- {1} SO_AGI_EXTREF.Fachapp.App;
+      GeoRole -- {0..2} Geom;
+    END Geo_Fach;
+
+  END GIS;
+
+END SO_AGI_EXTREF.

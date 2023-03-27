@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TRANSFER xmlns="http://www.interlis.ch/INTERLIS2.3">
+    <HEADERSECTION SENDER="ili2pg-4.3.1-23b1f79e8ad644414773bb9bd1a97c8c265c5082" VERSION="2.3">
+        <MODELS>
+            <MODEL NAME="SO_AGI_EXTREF" VERSION="2021-06-30" URI="http://geo.so.ch/models/AFU/"></MODEL>
+        </MODELS>
+    </HEADERSECTION>
+    <DATASECTION>
+        <SO_AGI_EXTREF.GIS BID="SO_AGI_EXTREF.GIS">
+            <SO_AGI_EXTREF.GIS.Geom TID="1">
+                <Name>Geom1</Name>
+                <AppRole REF="1/1"></AppRole>
+            </SO_AGI_EXTREF.GIS.Geom>
+            <SO_AGI_EXTREF.GIS.Geom TID="2">
+                <Name>Geom2</Name>
+                <AppRole REF="1/1"></AppRole>
+            </SO_AGI_EXTREF.GIS.Geom>
+        </SO_AGI_EXTREF.GIS>
+        <SO_AGI_EXTREF.Fachapp BID="SO_AGI_EXTREF.Fachapp">
+            <SO_AGI_EXTREF.Fachapp.App TID="1/1">
+                <Name>App</Name>
+            </SO_AGI_EXTREF.Fachapp.App>
+        </SO_AGI_EXTREF.Fachapp>
+    </DATASECTION>
+</TRANSFER>
+

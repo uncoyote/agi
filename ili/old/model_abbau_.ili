@@ -1,0 +1,49 @@
+INTERLIS 2.3;
+
+/** !!
+ * !! Modell für den Import der Fachapplikationsdaten mittels xtf
+ * !! (Topic Fachapplikation).
+ * !! In der Topic GIS ist die referenzierte Geometrie modelliert,
+ * !! deren Master-Daten sind in der Edit-DB zuhause.
+ * !!------------------------------------------------------------------------------
+ * !! Version    | wer | Aenderung
+ * !!------------------------------------------------------------------------------
+ * !! 2021-06-30 | OJ  | Initial erstellt.
+ * !! 2021-07-29 | OJ  | Modellierung der Aufzaelungen (Codierungen)
+ */
+!!@ technicalContact=mailto:agi@so.ch
+MODEL SO_AGI_EXTREF (de)
+AT "http://geo.so.ch/models/AFU/"
+VERSION "2021-06-30"  =
+  IMPORTS GeometryCHLV95_V1;
+
+  TOPIC GIS =
+    OID AS INTERLIS.UUIDOID; /*STANDARDOID*/
+
+    /** Geometrie zu einer Abbaustelle. Getrennte Erfassung (Fachanwendung - Desktop-GIS)
+     */
+    CLASS Geometrie =
+      Name : MANDATORY TEXT*256;
+    END Geometrie;
+
+  END GIS;
+
+  TOPIC Fachapplikation =
+    DEPENDS ON SO_AGI_EXTREF.GIS;
+
+    DOMAIN
+
+    CLASS Abbaustelle =
+      Name : MANDATORY TEXT*256;
+    END Abbaustelle;
+
+    /** Verknüpfung zwischen genau einer Abbaustelle und einer Geometrie.
+     */
+    ASSOCIATION Abbaustelle_Geometrie =
+      Geometrie (EXTERNAL) -- {1} SO_AGI_EXTREF.GIS.Geometrie;
+      Abbaustelle -- {1} Abbaustelle;
+    END Abbaustelle_Geometrie;
+
+  END Fachapplikation;
+
+END SO_AGI_EXTREF.
