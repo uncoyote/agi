@@ -1,0 +1,97 @@
+INTERLIS 2.3;
+
+MODEL Constraints (de) 
+    AT "http://geo.so.ch/models/AFU" VERSION "2022-11-30" =
+
+    IMPORTS GeometryCHLV95_V1;
+
+    DOMAIN
+
+    TOPIC Main =
+
+        CLASS Grandparent = 
+            Ident : MANDATORY TEXT*80;
+            HasSons : MANDATORY BOOLEAN;
+        END Grandparent;
+
+        CLASS Parent = 
+            Ident : MANDATORY TEXT*80;
+            HasSons : MANDATORY 0..1;
+            IsSwiss : MANDATORY BOOLEAN;
+        END Parent;
+
+        ASSOCIATION Grandparent_Parent =
+            GrandparentR -- {1} Grandparent;
+            ParentR -<> {1..*} Parent;
+        END Grandparent_Parent;
+
+        CLASS SwissParent =
+            Kanton : MANDATORY TEXT*80;
+        END SwissParent;
+
+        ASSOCIATION Parent_SwissParent =
+            ParentR -- {1} Parent;
+            SwissParentR -<> {0..1} SwissParent;
+        END Parent_SwissParent;
+
+        CONSTRAINTS OF Parent =
+            !!@ ilivalid.msg = "Linked Grandparent must have Attribute 'HasSons' set to true"
+            MANDATORY CONSTRAINT GrandparentR->HasSons;
+
+            !!@ ilivalid.msg = "Parent with IsSwiss 'true' muss have link to SwissParent"
+            MANDATORY CONSTRAINT 
+                (IsSwiss AND DEFINED(SwissParentR)) 
+                OR 
+                (NOT(IsSwiss) AND NOT(DEFINED(SwissParentR)));
+        END;
+
+        CLASS Child (ABSTRACT) = 
+            Ident : MANDATORY TEXT*80;
+        END Child;
+
+        CLASS Son
+        EXTENDS Child = 
+            Fuu: TEXT*80;
+            Bar: TEXT*80;
+
+            !!@ ilivalid.msg = "Exactly one in Fuu, Bar must be defined, the other must be null"
+            MANDATORY CONSTRAINT (DEFINED(Fuu) AND NOT (DEFINED(Bar))) OR (DEFINED(Bar) AND NOT (DEFINED(Fuu)));
+        END Son;
+
+        CLASS Daugther 
+        EXTENDS Child = 
+        END Daugther;
+
+        ASSOCIATION Parent_Child =
+            ParentR -- {1} Parent;
+            ChildR -<> {1..*} Child;
+
+            !!@ ilivalid.msg = "Linked Grandparent must have Attribute 'HasSons' set to true"
+            MANDATORY CONSTRAINT ParentR->GrandparentR->HasSons;
+        END Parent_Child;
+
+        CLASS Perimeter = 
+            Ident : MANDATORY TEXT*80;
+            Location: MANDATORY GeometryCHLV95_V1.Coord2;
+            Multi: MANDATORY BOOLEAN;
+        END Perimeter;
+
+        ASSOCIATION Grandparent_Perimeter =
+            GrandparentR -- {1..*} Grandparent;
+            PerimeterR -- {1..*} Perimeter;
+        END Grandparent_Perimeter; 
+
+    END Main;
+
+END Constraints.
+
+/*
+Fragen:
+- Wie Boolean-Attribut vergleichen? HasSons == true
+*/
+
+
+/*
+Ideen Einführung
+- QGIS V3 vorstellen
+*/ 

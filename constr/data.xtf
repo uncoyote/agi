@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TRANSFER xmlns="http://www.interlis.ch/INTERLIS2.3">
+    <HEADERSECTION SENDER="ili2gpkg-4.9.1-edeb4647bbdea52480a419b5aa605d425fcbd5df" VERSION="2.3">
+        <MODELS>
+            <MODEL NAME="Constraints" VERSION="2022-11-30" URI="http://geo.so.ch/models/AFU"></MODEL>
+        </MODELS>
+    </HEADERSECTION>
+    <DATASECTION>
+        <Constraints.Main BID="Constraints.Main">
+            <Constraints.Main.Grandparent TID="1">
+                <Ident>grandpa</Ident>
+                <HasSons>true</HasSons>
+            </Constraints.Main.Grandparent>
+            <Constraints.Main.Parent TID="2">
+                <Ident>parent</Ident>
+                <HasSons>1</HasSons>
+                <IsSwiss>true</IsSwiss>
+                <GrandparentR REF="1"></GrandparentR>
+            </Constraints.Main.Parent>
+            <Constraints.Main.SwissParent TID="6">
+                <Kanton>Luzern</Kanton>
+                <ParentR REF="2"></ParentR>
+            </Constraints.Main.SwissParent>
+            <Constraints.Main.Son TID="3">
+                <Ident>son</Ident>
+                <Bar>bar</Bar>
+                <ParentR REF="2"></ParentR>
+            </Constraints.Main.Son>
+            <Constraints.Main.Daugther TID="4">
+                <Ident>daughter</Ident>
+                <ParentR REF="2"></ParentR>
+            </Constraints.Main.Daugther>
+            <Constraints.Main.Perimeter TID="5">
+                <Ident>peri</Ident>
+                <Location>
+                    <COORD>
+                        <C1>2480092.864</C1>
+                        <C2>1224217.602</C2>
+                    </COORD>
+                </Location>
+                <Multi>false</Multi>
+            </Constraints.Main.Perimeter>
+            <Constraints.Main.Grandparent_Perimeter>
+                <GrandparentR REF="1"></GrandparentR>
+                <PerimeterR REF="5"></PerimeterR>
+            </Constraints.Main.Grandparent_Perimeter>
+        </Constraints.Main>
+    </DATASECTION>
+</TRANSFER>
