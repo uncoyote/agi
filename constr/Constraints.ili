@@ -9,9 +9,13 @@ MODEL Constraints (de)
 
     TOPIC Main =
 
+        DOMAIN
+            PeriAttributeGroupType = (max, min);
+
         CLASS Grandparent = 
             Ident : MANDATORY TEXT*80;
             HasSons : MANDATORY BOOLEAN;
+            PeriAttributeGroup : MANDATORY PeriAttributeGroupType;
         END Grandparent;
 
         CLASS Parent = 
@@ -36,7 +40,7 @@ MODEL Constraints (de)
 
         CONSTRAINTS OF Parent =
             !!@ ilivalid.msg = "Linked Grandparent must have Attribute 'HasSons' set to true"
-            MANDATORY CONSTRAINT GrandparentR->HasSons;
+            MANDATORY CONSTRAINT GrandparentR->HasSons == #true;
 
             !!@ ilivalid.msg = "Parent with IsSwiss 'true' muss have link to SwissParent"
             MANDATORY CONSTRAINT 
@@ -58,22 +62,30 @@ MODEL Constraints (de)
             MANDATORY CONSTRAINT (DEFINED(Fuu) AND NOT (DEFINED(Bar))) OR (DEFINED(Bar) AND NOT (DEFINED(Fuu)));
         END Son;
 
-        CLASS Daugther 
-        EXTENDS Child = 
-        END Daugther;
-
         ASSOCIATION Parent_Child =
             ParentR -- {1} Parent;
             ChildR -<> {1..*} Child;
-
-            !!@ ilivalid.msg = "Linked Grandparent must have Attribute 'HasSons' set to true"
-            MANDATORY CONSTRAINT ParentR->GrandparentR->HasSons;
         END Parent_Child;
+
+        CONSTRAINTS OF Son =            
+            !!@ ilivalid.msg = "Linked Parent must have Attribute 'HasSons' set to 1"
+            MANDATORY CONSTRAINT ParentR->HasSons == 1;
+        END;
+
+        CLASS Daugther 
+        EXTENDS Child = 
+            !!MANDATORY CONSTRAINT INTERLIS.isOfClass(THIS, "Constraints.Main.Daugther"); Hat so mal funktioniert? Schlägt aber nun fehl
+        END Daugther;
+        
 
         CLASS Perimeter = 
             Ident : MANDATORY TEXT*80;
             Location: MANDATORY GeometryCHLV95_V1.Coord2;
             Multi: MANDATORY BOOLEAN;
+            MaxX: 0..9999999;
+            MaxY: 0..9999999;
+            MinX: 0..9999999;
+            MinY: 0..9999999;
         END Perimeter;
 
         ASSOCIATION Grandparent_Perimeter =
@@ -81,17 +93,15 @@ MODEL Constraints (de)
             PerimeterR -- {1..*} Perimeter;
         END Grandparent_Perimeter; 
 
+        CONSTRAINTS OF Grandparent = 
+            !!@ ilivalid.msg = "Linked Perimeter are missing values for some of the follwing attributes: MinX, MinY"
+            SET CONSTRAINT WHERE PeriAttributeGroup == #min: DEFINED(PerimeterR->MinX) AND DEFINED(PerimeterR->MinY);
+
+            !!@ ilivalid.msg = "Linked Perimeter are missing values for some of the follwing attributes: MaxX, MaxY"
+            SET CONSTRAINT WHERE PeriAttributeGroup == #max: DEFINED(PerimeterR->MaxX) AND DEFINED(PerimeterR->MaxY);
+        END;
+
     END Main;
 
 END Constraints.
 
-/*
-Fragen:
-- Wie Boolean-Attribut vergleichen? HasSons == true
-*/
-
-
-/*
-Ideen Einführung
-- QGIS V3 vorstellen
-*/ 

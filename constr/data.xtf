@@ -10,6 +10,7 @@
             <Constraints.Main.Grandparent TID="1">
                 <Ident>grandpa</Ident>
                 <HasSons>true</HasSons>
+                <PeriAttributeGroup>min</PeriAttributeGroup>
             </Constraints.Main.Grandparent>
             <Constraints.Main.Parent TID="2">
                 <Ident>parent</Ident>
@@ -39,6 +40,8 @@
                     </COORD>
                 </Location>
                 <Multi>false</Multi>
+                <MinY>5</MinY>
+                <MinX>5</MinX>
             </Constraints.Main.Perimeter>
             <Constraints.Main.Grandparent_Perimeter>
                 <GrandparentR REF="1"></GrandparentR>
