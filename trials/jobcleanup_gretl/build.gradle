@@ -1,0 +1,61 @@
+class GretlPlugin implements Plugin<Project> {
+  void apply(final Project project) {
+
+    final cleanUpTask = project.tasks.create("cleanUp", task -> {
+        task.setGroup("Example");
+        task.setDescription("Closes connections with commmit / rollback.");
+        task.doLast(t -> {
+
+            def failure = null;
+
+            def allTasks = project.tasks.asMap.values() 
+            for (current in allTasks){
+                if(current == t)
+                    continue
+
+                if(current.state.failure != null){
+                    failure = current.state.failure
+                    break
+                }
+            }        
+
+            if (failure == null)
+                project.logger.lifecycle("commit")
+            else
+                project.logger.lifecycle("rollback")
+        })
+    });
+
+    project.allprojects.each { proj ->
+      proj.tasks.all {
+        // Make sure to not add a circular dependency
+        if (it != cleanUpTask) {
+          it.finalizedBy(cleanUpTask)
+        }
+      }
+    }
+  }
+}
+
+apply plugin: GretlPlugin
+
+task goodoutcome(){
+    doLast{
+        System.out.println("Hello from goodoutcome")
+    }
+}
+
+task badoutcome(){
+    doLast{
+        throw new GradleException("Exception in task badoutcome")
+    }
+}
+
+/*
+Wieso nutzen der states aller Tasks anstelle der states der Projekte?
+"project.state" scheint sich nicht auf die execution Phase zu beziehen -> kann nicht verwendet werden
+
+Todo:
+- Rootproject
+- Variable
+*/
